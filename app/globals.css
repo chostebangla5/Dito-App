@@ -1,26 +1,283 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Dynamic Variables tied to :root */
+  --color-background: var(--bg-primary);
+  --color-foreground: var(--plum-deep);
+  
+  --color-surface: var(--bg-card);
+  --color-surface-hover: var(--surface-hover);
+  --color-border: var(--blush-border);
+
+  --color-primary: var(--rose);
+  --color-primary-hover: #A03148;
+  
+  --color-text-muted: var(--muted-text);
+  --color-text-accent: var(--violet);
+
+  /* Shared fixed colors for buttons/gradients */
+  --color-rose: #C4415C;
+  --color-violet: #8B5E8B;
+  --color-success: #4ADE80;
+  --color-warning-bg: #FFF3E0;
+  --color-warning-text: #7A4A00;
+  --color-warning-border: #FFD0A0;
+
+  /* Font mappings from CSS variables injected by next/font */
+  --font-nunito: var(--font-nunito);
+  --font-lato: var(--font-lato);
+  --font-poppins: var(--font-poppins);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  /* LIGHT THEME (Default) */
+  --bg-primary: #FAF6F8;
+  --bg-card: #FFFFFF;
+  --bg-chat: #F2EDF4;
+  
+  --plum-deep: #3D1A32;
+  --plum-mid: #6B2D5E;
+  --rose: #C4415C;
+  --violet: #8B5E8B;
+
+  --blush-border: #EDD8E4;
+  --muted-text: #B090A0;
+  
+  --surface-hover: #FDF9FB;
+}
+
+.dark {
+  /* DARK THEME */
+  --bg-primary: #1A0A14;
+  --bg-card: #2A1220;
+  --bg-chat: #150910;
+  
+  --plum-deep: #F3E8EE;
+  --plum-mid: #9E5685;
+  --rose: #DE5B76;
+  --violet: #A87CA8;
+
+  --blush-border: #4A2A40;
+  --muted-text: #9070A0;
+  
+  --surface-hover: #351A29;
+}
+
+.theme-transparent {
+  /* TRANSPARENT (GLASSMORPHISM) THEME */
+  --bg-primary: transparent;
+  --bg-card: rgba(255, 255, 255, 0.05);
+  --bg-chat: transparent;
+  
+  --plum-deep: #FFFFFF;
+  --plum-mid: #FFFFFF;
+  --rose: rgba(196, 65, 92, 0.8);
+  --violet: rgba(139, 94, 139, 0.8);
+
+  --blush-border: rgba(255, 255, 255, 0.15);
+  --muted-text: rgba(255, 255, 255, 0.6);
+  
+  --surface-hover: rgba(255, 255, 255, 0.1);
+}
+
+/* Base resets */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--plum-deep);
+  transition: background-color 0.4s ease, color 0.4s ease;
+  font-family: var(--font-lato), sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-nunito), sans-serif;
+}
+
+/* Background gradient wrapper for transparent mode */
+.bg-gradient-glass {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: -1;
+  background: linear-gradient(135deg, #1A0B16 0%, #3D1A32 50%, #6B2D5E 100%);
+  background-size: 200% 200%;
+  animation: gradientFlow 15s ease infinite;
+  display: none;
+}
+.theme-transparent .bg-gradient-glass {
+  display: block;
+}
+
+/* Glass effect utility */
+.glass {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--blush-border);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-text);
+}
+
+/* Timing Rules */
+:root {
+  --duration-instant: 150ms;
+  --duration-fast: 250ms;
+  --duration-normal: 350ms;
+  --duration-slow: 500ms;
+  --duration-long: 700ms;
+  
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-smooth: cubic-bezier(0.4, 0.0, 0.2, 1);
+  --ease-in-soft: cubic-bezier(0.4, 0.0, 1.0, 1);
+  --ease-out-soft: cubic-bezier(0.0, 0.0, 0.2, 1);
+}
+
+/* Advanced Animations */
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.05); }
+  30% { transform: scale(1); }
+  45% { transform: scale(1.03); }
+  60% { transform: scale(1); }
+}
+
+@keyframes onlinePulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.5); }
+  50% { transform: scale(1.3); box-shadow: 0 0 0 6px rgba(74, 222, 128, 0); }
+}
+
+@keyframes partnerTyping {
+  0%, 80%, 100% { transform: translateY(0px); opacity: 0.4; }
+  40% { transform: translateY(-8px); opacity: 1; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes fadeInUpSpring {
+  0% { opacity: 0; transform: translateY(40px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRightSoft {
+  0% { opacity: 0; transform: translateX(20px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInLeftSoft {
+  0% { opacity: 0; transform: translateX(-20px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideDownSpring {
+  0% { opacity: 0; transform: translateY(-100%); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Animation Utilities */
+.animate-fade-in { animation: slideInRightSoft var(--duration-normal) var(--ease-out-soft) forwards; }
+.animate-fade-in-up { animation: fadeInUpSpring var(--duration-normal) var(--ease-spring) forwards; }
+.animate-float { animation: float 4s ease-in-out infinite; }
+
+.partner-avatar {
+  animation: heartbeat 4s ease-in-out infinite;
+}
+
+.online-dot {
+  animation: onlinePulse 3s ease-in-out infinite;
+}
+
+.dot-1 { animation: partnerTyping 1.4s infinite; animation-delay: 0ms; }
+.dot-2 { animation: partnerTyping 1.4s infinite; animation-delay: 180ms; }
+.dot-3 { animation: partnerTyping 1.4s infinite; animation-delay: 360ms; }
+
+.skeleton {
+  background: linear-gradient(90deg, var(--blush-border) 25%, var(--bg-card) 50%, var(--blush-border) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Chat message animations */
+.msg-user {
+  animation: slideInRightSoft var(--duration-normal) var(--ease-out-soft);
+}
+.msg-partner {
+  animation: slideInLeftSoft var(--duration-normal) var(--ease-out-soft);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-rose), var(--color-violet));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Button & UI specific rules */
+.btn-primary {
+  background: linear-gradient(135deg, #C4415C, #8B5E8B);
+  border-radius: 16px;
+  padding: 14px 24px;
+  font-family: var(--font-nunito), sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  color: white;
+  box-shadow: 0 4px 16px rgba(196, 65, 92, 0.40);
+  min-height: 52px;
+  letter-spacing: 0.3px;
+  transition: transform var(--duration-instant) var(--ease-spring), box-shadow var(--duration-instant);
+}
+.btn-primary:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 8px rgba(196, 65, 92, 0.25);
+}
+
+.chat-input {
+  background: var(--bg-card);
+  border: 1.5px solid var(--blush-border);
+  border-radius: 28px;
+  padding: 12px 20px;
+  font-family: var(--font-lato), sans-serif;
+  font-size: 15px;
+  color: var(--plum-deep);
+  min-height: 52px;
+  transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
+}
+.chat-input:focus {
+  border-color: #C4415C;
+  box-shadow: 0 0 0 3px rgba(196, 65, 92, 0.12);
+  outline: none;
 }
